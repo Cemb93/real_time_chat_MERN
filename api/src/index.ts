@@ -1,8 +1,10 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config"
-const { DB } = process.env;
+const { DB } = process.env as VariablesEntorno;
 import { connect } from 'mongoose';
+import { allRoutes } from "./routes";
+import { VariablesEntorno } from "./types/IEnv";
 const app: Application = express();
 
 const dbConexion = async (): Promise<void> => {
@@ -18,6 +20,7 @@ const dbConexion = async (): Promise<void> => {
 
 app.use(express.json());
 app.use(cors());
+app.use(allRoutes);
 
 const PORT = 3001
 
