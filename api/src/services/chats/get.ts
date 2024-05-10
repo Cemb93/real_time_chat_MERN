@@ -3,12 +3,13 @@ import { chatsModel } from "../../models/Chats";
 import { IChats } from "../../interface/IChats";
 
 export async function findUserChats(req: Request, res: Response) {
-  const { id } = req.params;
+  const { userId } = req.params;
   
   try {
+    // * userId = ID DE UNO DE LOS MIENBROS DEL CHAT
     const chats: IChats[] = await chatsModel.find({
       members: {
-        $in: [id],
+        $in: [userId],
       }
     });
 

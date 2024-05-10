@@ -6,7 +6,11 @@ export async function createChat(req: Request, res: Response) {
   const chat = req.body as IChats;
 
   try {
-    const existChat = await chatsModel.findOne({
+    /* 
+      ? firstId = ID DEL USUARIO UNO
+      * firstId = ID DEL USUARIO DOS
+    */
+    const existChat: IChats | null = await chatsModel.findOne({
       members: {
         $all: [chat.firstId, chat.secondId],
       }
@@ -16,7 +20,7 @@ export async function createChat(req: Request, res: Response) {
       return res.status(200).json(existChat);
     }
 
-    const newChat = await chatsModel.create({
+    const newChat: IChats = await chatsModel.create({
       members: [chat.firstId, chat.secondId],
     });
 

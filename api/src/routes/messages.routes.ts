@@ -4,7 +4,7 @@ import { getMessages } from "../services/messages/get";
 
 export const messagesRouter = Router();
 
-const MESSAGE = "message"
+const MESSAGE = "messages"
 
 messagesRouter.post(`/${MESSAGE}`, createMessage);
 messagesRouter.get(`/${MESSAGE}/:chatId`, getMessages);

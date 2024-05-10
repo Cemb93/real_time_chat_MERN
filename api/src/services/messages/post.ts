@@ -6,7 +6,11 @@ export async function createMessage(req: Request, res: Response) {
   const message = req.body as IMessages;
 
   try {
-    const newMessage = await messagesModel.create({
+    /* 
+      ? DE LA SIGUIENTE RUTA = http://localhost:3001/chats/find/:firstId/:secondId
+      * SE OBTIENE EL "_id", Y SE USA PARA "chatId"
+    */
+    const newMessage: IMessages = await messagesModel.create({
       chatId: message.chatId,
       senderId: message.senderId,
       text: message.text
