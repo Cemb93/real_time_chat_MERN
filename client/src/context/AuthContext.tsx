@@ -1,30 +1,13 @@
-import { createContext, useCallback, useState } from "react";
-
-export type ContainerProps = {
-  children: React.ReactNode
-}
-
-export interface IUser {
-  name: string
-}
-
-export interface IRegister {
-  name: string
-  email: string
-  password: string
-}
-
-export type TAuthContext = {
-  // user: Record<string, string> // ? SE USA CUANDO ES UN OBJETO QUE CONTIENE LO QUE SEA
-  user: IUser
-  registerInfo: IRegister
-  setRegisterInfo: React.Dispatch<React.SetStateAction<IRegister>>
-  updateRegisterInfo: (info: IRegister) => void
-}
+import { createContext, useCallback, useEffect, useState } from "react";
+import { postRequest } from "../hooks/services";
+import { ContainerProps, IRegister, IUser, TAuthContext } from "../interface";
+const { VITE_BACKEND_URL } = import.meta.env;
 
 export const AuthContext = createContext<TAuthContext>({
   user: {
     name: "",
+    email: "",
+    password: "",
   },
   registerInfo: {
     name: "",
@@ -33,11 +16,15 @@ export const AuthContext = createContext<TAuthContext>({
   },
   setRegisterInfo: function() {},
   updateRegisterInfo: function() {},
+  registerUser: function() {},
+  logoutUser: function() {},
 });
 
 export function AuthContextProvider({ children }: ContainerProps) {
-  const [user, ] = useState<IUser>({
-    name: "",
+  const [user, setUser] = useState<IUser | null>({
+    name:"",
+    email:"",
+    password:"",
   });
   const [registerInfo, setRegisterInfo] = useState<IRegister>({
     name:"",
@@ -45,8 +32,27 @@ export function AuthContextProvider({ children }: ContainerProps) {
     password:"",
   });
 
+  useEffect(function() {
+    // const user = localStorage.getItem("user");
+    const user: IUser = JSON.parse(JSON.stringify(localStorage.getItem("user")));
+    setUser(user);
+  }, []);
+
   const updateRegisterInfo = useCallback(function(info: IRegister): void {
     setRegisterInfo(info);
+  }, []);
+  
+  const registerUser = useCallback(async function(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    e.preventDefault();
+    const response = await postRequest(`${VITE_BACKEND_URL}/register`, JSON.stringify(registerInfo));
+    
+    localStorage.setItem("user", JSON.stringify(response));
+    setUser(response);
+  }, [registerInfo]);
+
+  const logoutUser = useCallback(function(): void {
+    localStorage.removeItem("user");
+    setUser(null);
   }, []);
 
   return (
@@ -56,6 +62,8 @@ export function AuthContextProvider({ children }: ContainerProps) {
         registerInfo,
         setRegisterInfo,
         updateRegisterInfo,
+        registerUser,
+        logoutUser,
       }}
     >
       {children}

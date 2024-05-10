@@ -3,11 +3,11 @@ import { Alert, Button, Col, Form, Row, Stack } from "react-bootstrap"
 import { AuthContext } from "../context/AuthContext"
 
 export const Register = () => {
-  const { registerInfo, updateRegisterInfo } = useContext(AuthContext);
+  const { registerInfo, updateRegisterInfo, registerUser } = useContext(AuthContext);
 
   return (
     <>
-      <Form>
+      <Form onSubmit={registerUser}>
         <Row style={{
           height: "100vh",
           justifyContent: "center",

@@ -35,11 +35,13 @@ export async function login(req: Request, res: Response) {
       const token = await generarToken(existUser.email);
 
       const data = {
-        user: existUser,
-        token,
+        id: existUser._id,
+        name: existUser.name,
+        email: existUser.email,
+        token: token,
       };
 
-      return res.status(200).json({ msg: "Session y token valido", data });
+      return res.status(200).json(data);
     }
   } catch (error) {
     if (error instanceof Error) {
