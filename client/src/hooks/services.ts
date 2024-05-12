@@ -6,8 +6,23 @@ export const BACK_END_URL = VITE_BACKEND_URL;
 export const CHAT = "chats";
 export const MESSAGE = "messages";
 
-export async function postRequest(url: string, post: ISessionUser) {
+export async function postRequest(url: string, post: ISessionUser | string) {
+  console.log("post:", JSON.parse(JSON.stringify(post)))
   try {
+    if (typeof post === "string") {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(post),
+      });
+    
+      const data = await response.json();
+      console.log("data:", data)
+    
+      return data;
+    }
     const response = await fetch(url, {
       method: "POST",
       headers: {

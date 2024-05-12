@@ -4,7 +4,7 @@ import { IChats, ISessionUser } from "../interface";
 
 export function useFetchRecipient(chat: IChats, user: ISessionUser) {
   // console.log("chat:", chat.members)
-  const [recipentUser, setRecipentUser] = useState<Record<string, string>>({});
+  const [recipentUser, setRecipentUser] = useState<ISessionUser | null>(null);
   const recipientId = chat.members && chat.members.find(function(id: string) {
     return id !== user.id;
   });
@@ -13,7 +13,7 @@ export function useFetchRecipient(chat: IChats, user: ISessionUser) {
   useEffect(function() {
     async function getUser() {
       if (!recipientId) return null;
-      const response = await getRequest(`${BACK_END_URL}/users/${recipientId}`);
+      const response: ISessionUser = await getRequest(`${BACK_END_URL}/users/${recipientId}`);
       // console.log("response:", response)
       setRecipentUser(response)
     }

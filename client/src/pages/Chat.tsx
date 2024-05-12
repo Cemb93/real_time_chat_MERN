@@ -8,14 +8,14 @@ import { Container, Stack } from "react-bootstrap";
 export const Chat = () => {
   const { user } = useContext(AuthContext);
   const { userChats } = useContext(ChatContext);
-  // console.log("userChats:", userChats.length)
+  // console.log("userChats:", userChats)
   return (
     <div>
       <Container>
+        <PotentialChat />
         {
           userChats.length === 0 ? null : (
             <div>
-              <PotentialChat />
               <Stack
                 direction="horizontal"
                 gap={4}

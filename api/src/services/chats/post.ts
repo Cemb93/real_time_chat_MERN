@@ -4,6 +4,7 @@ import { chatsModel } from "../../models/Chats";
 
 export async function createChat(req: Request, res: Response) {
   const chat = req.body as IChats;
+  console.log("chat:", chat)
 
   try {
     /* 

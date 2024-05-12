@@ -32,7 +32,9 @@ export type TChatContext = {
   // userChats: Record<string, string>[]
   // userChats: ISessionUser[]
   userChats: IUserChat[]
-  // potentialChats: ISessionUser[]
+  potentialChats: ISessionUser[]
+  // createChat: (firstId: string, secondId: string) => Promise<void>
+  createChat: (firstId: string, secondId: string) => void
 }
 
 export interface IChats {
