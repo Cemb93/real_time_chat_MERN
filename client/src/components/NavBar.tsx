@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 
 export const NavBar = () => {
   const { user, logoutUser } = useContext(AuthContext);
-  // console.log("user:", user?.name)
+  // console.log("user:", user)
   return (
     <Navbar 
       bg="dark" 
@@ -21,16 +21,20 @@ export const NavBar = () => {
           </Link>
         </h2>
         {
-          user && <span>Usuario {user.name}</span>
+          user.id && <span>Usuario {user.name}</span>
         }
         <Nav>
           <Stack direction="horizontal" gap={3}>
             {
-              user && (
+              user.name && (
                 <div>
-                  <Link onClick={function() {
-                    logoutUser()
-                  }} to={"/inicio"} className="link light test-decoration-none" >
+                  <Link 
+                    onClick={function() {
+                      logoutUser()
+                    }} 
+                    to={"/"} 
+                    className="link light test-decoration-none" 
+                  >
                     Log Out
                   </Link>
                 </div>
@@ -38,7 +42,7 @@ export const NavBar = () => {
             }
 
             {
-              !user && (
+              !user.name && (
                 <div>
                   <Link to={"/login"} className='link light test-decoration-none'>
                     LOGIN

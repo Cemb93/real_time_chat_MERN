@@ -1,14 +1,14 @@
 export interface ContextProviderProps {
   children: React.ReactNode
   // user?: Record<string, string>
-  user: ISessionUser
+  user: ISessionUser | null
 }
 
 export interface ISessionUser {
-  _id?: string
-  name?: string
+  id: string
+  name: string
   email: string
-  password: string
+  password?: string
 }
 
 // type PropsUser = Pick<ISessionUser, 'email' | 'password'>

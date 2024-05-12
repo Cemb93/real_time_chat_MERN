@@ -22,13 +22,13 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
   //     const pChats = response.filter(function(el: ISessionUser) {
   //       const isChatCreated: {trueOrFalse: boolean} = {trueOrFalse: false};
         
-  //       if (user?._id === el._id) return false;
+  //       if (user?.id === el.id) return false;
         
   //       if (userChats) {
   //         isChatCreated.trueOrFalse = userChats.some(function(chat: IChats) {
   //           // console.log("chat:", chat.members)
   //           if (chat.members) {
-  //             return chat.members[0] === el._id || chat.members[1] === el._id;
+  //             return chat.members[0] === el.id || chat.members[1] === el.id;
   //           }
   //         });
   //         console.log("isChatCreated:", isChatCreated.trueOrFalse)
@@ -44,17 +44,15 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
   // // }, [userChats]);
   // }, []);
 
+  // console.log("user:", user)
   // console.log("user:", JSON.parse(JSON.stringify(user)))
   useEffect(function() {
     async function getUserChats() {
-      if (user?._id) {
-        const response: IUserChat[] = await getRequest(`${BACK_END_URL}/${CHAT}/${user._id}`);
+      if (user?.id) {
+        const response: IUserChat[] = await getRequest(`${BACK_END_URL}/${CHAT}/${user.id}`);
         setUserChats(response);
-        console.log("response:", response)
+        // console.log("response:", response)
       }
-      const response: IUserChat[] = await getRequest(`${BACK_END_URL}/${CHAT}/${!user._id ? "664061bdd4e046aaa5ec7929" : user._id}`);
-      setUserChats(response);
-      console.log("response:", response)
     }
 
     getUserChats();

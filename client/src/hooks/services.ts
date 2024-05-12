@@ -26,13 +26,13 @@ export async function postRequest(url: string, post: ISessionUser) {
 }
 
 export async function getRequest(url: string) {
-  console.log("url:", url)
+  // console.log("url:", url)
   try {
     const response = await fetch(url);
   
     if (response.ok) {
       const data = await response.json();
-      console.log("data:", data)
+      // console.log("data:", data)
       return data;
     }
   } catch (error) {

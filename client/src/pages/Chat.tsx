@@ -8,12 +8,12 @@ import { Container, Stack } from "react-bootstrap";
 export const Chat = () => {
   const { user } = useContext(AuthContext);
   const { userChats } = useContext(ChatContext);
-  console.log("userChats:", userChats)
+  // console.log("userChats:", userChats.length)
   return (
     <div>
       <Container>
         {
-          userChats.length === 1 ? null : (
+          userChats.length === 0 ? null : (
             <div>
               <PotentialChat />
               <Stack
