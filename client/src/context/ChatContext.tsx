@@ -1,77 +1,60 @@
 import { createContext, useEffect, useState } from "react";
 import { BACK_END_URL, CHAT, getRequest } from "../hooks/services";
-
-export interface IUsers {
-  _id?: string
-  name: string,
-  email: string,
-  password: string,
-}
-
-export type ContainerProps = {
-  children: React.ReactNode
-  // user: IUsers
-  user: Record<string, string>
-}
-
-export type TChatContext = {
-  // user?: IUsers
-  // user?: Record<string, string>
-  // children?: Record<string, string>
-  userChats: Record<string, string>[]
-  potentialChats: Record<string, string>[]
-}
+import { ContextProviderProps, IChats, ISessionUser, IUserChat, TChatContext } from "../interface";
 
 export const ChatContext = createContext<TChatContext>({
-  // user: {
-  //   name: "",
-  //   email: "",
-  //   password: "",
-  // },
-  // user: {},
-  // children: {},
   userChats: [],
-  potentialChats: [],
+  // potentialChats: [],
 });
 
-export function ChatContextProvider({ children, user }: ContainerProps) {
-  console.log("user:", user)
-  const [userChats, setUserChats] = useState<Record<string, string>[]>([]);
-  const [potentialChats, setPtentialChats] = useState<Record<string, string>[]>([]);
+export function ChatContextProvider({ children, user }: ContextProviderProps) {
+  const [userChats, setUserChats] = useState<IUserChat[]>([]);
 
-  useEffect(function() {
-    async function getUsers() {
-      const response = await getRequest(`${BACK_END_URL}/users`);
-      setUserChats(response);
-      console.log("response:", response)
+  // const [chats, setChats] = useState<IChats[]>([]);
+  // const [potentialChats, setPtentialChats] = useState<ISessionUser[]>([]);
 
-      const pChats = response.filter(function(el: any) {
-        let isChatCreated = false;
+  // useEffect(function() {
+  //   async function getUsers() {
+  //     const response: ISessionUser[] = await getRequest(`${BACK_END_URL}/users`);
+  //     setUserChats(response);
+  //     // console.log("response:", response)
+      
+  //     const pChats = response.filter(function(el: ISessionUser) {
+  //       const isChatCreated: {trueOrFalse: boolean} = {trueOrFalse: false};
+        
+  //       if (user?._id === el._id) return false;
+        
+  //       if (userChats) {
+  //         isChatCreated.trueOrFalse = userChats.some(function(chat: IChats) {
+  //           // console.log("chat:", chat.members)
+  //           if (chat.members) {
+  //             return chat.members[0] === el._id || chat.members[1] === el._id;
+  //           }
+  //         });
+  //         console.log("isChatCreated:", isChatCreated.trueOrFalse)
+  //       }
 
-        if (user._id === el._id) return false;
+  //       return !isChatCreated.trueOrFalse;
+  //     });
 
-        if (userChats) {
-          isChatCreated = userChats.some(function(chat: any) {
-            return chat.members[0] === el._id || chat.members[1] === el._id;
-          });
-        }
+  //     setPtentialChats(pChats);
+  //   }
 
-        return !isChatCreated;
-      });
+  //   getUsers();
+  // // }, [userChats]);
+  // }, []);
 
-      setPtentialChats(pChats);
-    }
-
-    getUsers();
-  }, [userChats]);
-
+  // console.log("user:", JSON.parse(JSON.stringify(user)))
   useEffect(function() {
     async function getUserChats() {
-      if (user._id) {
-        const response = await getRequest(`${BACK_END_URL}/${CHAT}/${user._id}`);
+      if (user?._id) {
+        const response: IUserChat[] = await getRequest(`${BACK_END_URL}/${CHAT}/${user._id}`);
         setUserChats(response);
         console.log("response:", response)
       }
+      const response: IUserChat[] = await getRequest(`${BACK_END_URL}/${CHAT}/${!user._id ? "664061bdd4e046aaa5ec7929" : user._id}`);
+      setUserChats(response);
+      console.log("response:", response)
     }
 
     getUserChats();
@@ -80,9 +63,8 @@ export function ChatContextProvider({ children, user }: ContainerProps) {
   return (
     <ChatContext.Provider
       value={{
-        // user,
         userChats,
-        potentialChats
+        // potentialChats
       }}
     >
       {children}

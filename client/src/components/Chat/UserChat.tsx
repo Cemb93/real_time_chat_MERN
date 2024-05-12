@@ -1,12 +1,24 @@
+import { Stack } from "react-bootstrap";
 import { useFetchRecipient } from "../../hooks/useFetchRecipient";
+import { IChats, ISessionUser } from "../../interface";
 
-export const UserChat = (props: any) => {
-  console.log("props:", props)
-  const recipentUser = useFetchRecipient(props.chat, props.user);
-  console.log("recipentUser:", recipentUser)
+export const UserChat = (
+  {chat, user}:
+  {chat: IChats, user: ISessionUser}
+) => {
+  // console.log("chat:", chat)
+  const recipentUser = useFetchRecipient(chat, user);
+  // console.log("recipentUser:", recipentUser)
   return (
-    <div>
-      <p>{recipentUser.name}</p>
-    </div>
+    <Stack
+      direction="horizontal"
+      gap={3}
+    >
+      <div>IMG</div>
+      <p>{recipentUser && recipentUser.name}</p>
+      <div>TEXT MESSAGES</div>
+      <div>FECHA</div>
+      <div>NOTIFICACION O MENSAJES</div>
+    </Stack>
   )
 }

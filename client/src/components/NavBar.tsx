@@ -30,7 +30,7 @@ export const NavBar = () => {
                 <div>
                   <Link onClick={function() {
                     logoutUser()
-                  }} to={"/login"} className="link light test-decoration-none" >
+                  }} to={"/inicio"} className="link light test-decoration-none" >
                     Log Out
                   </Link>
                 </div>
