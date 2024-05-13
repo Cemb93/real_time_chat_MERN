@@ -1,11 +1,14 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { BACK_END_URL, CHAT, getRequest, postChatRequest, postRequest } from "../hooks/services";
-import { ContextProviderProps, IChats, ISessionUser, TChatContext } from "../interface";
+import { ContextProviderProps, IChats, IMessages, ISessionUser, TChatContext } from "../interface";
 
 export const ChatContext = createContext<TChatContext>({
   userChats: [],
   potentialChats: [],
+  messages: [],
+  currentChats: {},
   createChat: function() {},
+  updateCurrentChat: function() {},
 });
 
 export function ChatContextProvider({ children, user }: ContextProviderProps) {
@@ -13,6 +16,10 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
 
   // const [chats, setChats] = useState<IChats[]>([]);
   const [potentialChats, setPtentialChats] = useState<ISessionUser[]>([]);
+  const [currentChats, setCurrentChats] = useState<IChats>({});
+  const [messages, setMessages] = useState<IMessages[]>([]);
+  console.log("currentChats:", currentChats)
+  console.log("messages:", messages)
 
   useEffect(function() {
     async function getUsers() {
@@ -48,6 +55,21 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
   // }, [userChats]);
   }, []);
 
+  useEffect(function() {
+    async function getMessages() {
+      const response: IMessages[] = await getRequest(`${BACK_END_URL}/messages/${currentChats._id}`);
+      setMessages(response);
+      // console.log("response:", response)
+    }
+
+    getMessages();
+  }, [currentChats]);
+  // }, []);
+
+  const updateCurrentChat = useCallback(function(chat: IChats) {
+    setCurrentChats(chat)
+  }, []);
+
   // console.log("user:", user)
   // console.log("user:", JSON.parse(JSON.stringify(user)))
   useEffect(function() {
@@ -80,6 +102,9 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
         userChats,
         potentialChats,
         createChat,
+        updateCurrentChat,
+        messages,
+        currentChats,
       }}
     >
       {children}

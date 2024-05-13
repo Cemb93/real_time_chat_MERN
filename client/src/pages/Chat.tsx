@@ -4,10 +4,11 @@ import { UserChat } from "../components/Chat/UserChat";
 import { AuthContext } from "../context/AuthContext";
 import { PotentialChat } from "../components/Chat/PotentialChat";
 import { Container, Stack } from "react-bootstrap";
+import { ChatBox } from "../components/Chat/ChatBox";
 
 export const Chat = () => {
   const { user } = useContext(AuthContext);
-  const { userChats } = useContext(ChatContext);
+  const { userChats, updateCurrentChat } = useContext(ChatContext);
   // console.log("userChats:", userChats)
   return (
     <div>
@@ -26,14 +27,16 @@ export const Chat = () => {
                     userChats?.map(function(chat) {
                       // console.log("userChats:", userChats)
                       return (
-                        <div key={chat._id}>
+                        <div key={chat._id} onClick={function() {
+                          updateCurrentChat(chat)
+                        }}>
                           <UserChat chat={chat} user={user} />
                         </div>
                       );
                     })
                   }
                 </Stack>
-                <p>CHAT - BOX</p>
+                <ChatBox />
               </Stack>
             </div>
           )

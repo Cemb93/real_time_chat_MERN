@@ -13,5 +13,5 @@ export const messagesModel = model<IMessages>("message", new Schema<IMessages>({
   },
 }, {
   versionKey: false,
-  timestamps: false,
+  timestamps: true,
 }));

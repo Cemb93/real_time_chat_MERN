@@ -29,8 +29,11 @@ export type TChatContext = {
   userChats: IChats[]
   // userChats: IUserChat[]
   potentialChats: ISessionUser[]
+  messages: IMessages[]
+  currentChats: IChats
   // createChat: (firstId: string, secondId: string) => Promise<void>
   createChat: (firstId: string, secondId: string) => void
+  updateCurrentChat: (chat: IChats) => void
 }
 
 export interface IChats {
@@ -43,3 +46,11 @@ export interface IChats {
 // type OmitPropChat = Omit<IChats, '_id'>
 
 // export interface IUserChat extends OmitPropChat, ISessionUser {}
+
+export interface IMessages {
+  _id?: string
+  chatId: string,
+  senderId: string,
+  text: string,
+  createdAt: string,
+}

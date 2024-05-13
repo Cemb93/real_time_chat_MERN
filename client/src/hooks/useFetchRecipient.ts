@@ -18,7 +18,7 @@ export function useFetchRecipient(chat: IChats, user: ISessionUser) {
       setRecipentUser(response)
     }
     getUser();
-  }, []);
+  }, [recipientId]);
 
   return recipentUser;
 }
