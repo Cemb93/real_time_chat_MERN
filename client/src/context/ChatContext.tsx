@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-import { BACK_END_URL, CHAT, getRequest, postRequest } from "../hooks/services";
-import { ContextProviderProps, IChats, ISessionUser, IUserChat, TChatContext } from "../interface";
+import { BACK_END_URL, CHAT, getRequest, postChatRequest, postRequest } from "../hooks/services";
+import { ContextProviderProps, IChats, ISessionUser, TChatContext } from "../interface";
 
 export const ChatContext = createContext<TChatContext>({
   userChats: [],
@@ -9,9 +9,9 @@ export const ChatContext = createContext<TChatContext>({
 });
 
 export function ChatContextProvider({ children, user }: ContextProviderProps) {
-  const [userChats, setUserChats] = useState<IUserChat[]>([]);
+  const [userChats, setUserChats] = useState<IChats[]>([]);
 
-  const [chats, setChats] = useState<IChats[]>([]);
+  // const [chats, setChats] = useState<IChats[]>([]);
   const [potentialChats, setPtentialChats] = useState<ISessionUser[]>([]);
 
   useEffect(function() {
@@ -22,21 +22,24 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
       
       const pChats = response.filter(function(el: ISessionUser) {
         const isChatCreated: {trueOrFalse: boolean} = {trueOrFalse: false};
+        console.log("user:", user?._id)
+        console.log("el:", el._id)
         
-        if (user?.id === el.id) return false;
+        if (user?._id === el._id) return false;
         
         if (userChats) {
           isChatCreated.trueOrFalse = userChats.some(function(chat: IChats) {
             // console.log("chat:", chat.members)
             if (chat.members) {
-              return chat.members[0] === el.id || chat.members[1] === el.id;
+              return chat.members[0] === el._id || chat.members[1] === el._id;
             }
           });
-          // console.log("isChatCreated:", isChatCreated.trueOrFalse)
         }
+        // console.log("isChatCreated:", isChatCreated.trueOrFalse)
 
         return !isChatCreated.trueOrFalse;
       });
+      console.log("pChats:", pChats)
 
       setPtentialChats(pChats);
     }
@@ -49,8 +52,8 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
   // console.log("user:", JSON.parse(JSON.stringify(user)))
   useEffect(function() {
     async function getUserChats() {
-      if (user?.id) {
-        const response: IUserChat[] = await getRequest(`${BACK_END_URL}/${CHAT}/${user.id}`);
+      if (user?._id) {
+        const response: IChats[] = await getRequest(`${BACK_END_URL}/${CHAT}/${user._id}`);
         setUserChats(response);
         // console.log("response:", response)
       }
@@ -60,10 +63,12 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
   }, [user]);
   
   const createChat = useCallback(async function(firstId: string, secondId: string) {
-    const response: IUserChat = await postRequest(`${BACK_END_URL}/${CHAT}`, JSON.stringify({
+    console.log("firstId:", firstId)
+    console.log("secondId:", secondId)
+    const response: IChats = await postRequest(`${BACK_END_URL}/${CHAT}`, JSON.parse(JSON.stringify({
       firstId,
       secondId,
-    }));
+    })));
     setUserChats(function(prec) {
       return [...prec, response];
     });

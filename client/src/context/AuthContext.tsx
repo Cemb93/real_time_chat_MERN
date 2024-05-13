@@ -6,19 +6,19 @@ const { VITE_BACKEND_URL } = import.meta.env;
 
 export const AuthContext = createContext<TAuthContext>({
   user: {
-    id: "",
+    _id: "",
     name: "",
     email: "",
     // password: "",
   },
   registerInfo: {
-    id: "",
+    _id: "",
     name: "",
     email: "",
     password: "",
   },
   loginInfo: {
-    id: "",
+    _id: "",
     name: "",
     email: "",
     password: "",
@@ -34,19 +34,19 @@ export const AuthContext = createContext<TAuthContext>({
 export function AuthContextProvider({ children }: ContextProviderProps) {
   const navigation = useNavigate();
   const [user, setUser] = useState<ISessionUser>({
-    id: "",
+    _id: "",
     name:"",
     email:"",
     // password:"",
   });
   const [registerInfo, setRegisterInfo] = useState<ISessionUser>({
-    id: "",
+    _id: "",
     name:"",
     email:"",
     password:"",
   });
   const [loginInfo, setLoginInfo] = useState<ISessionUser>({
-    id: "",
+    _id: "",
     name: "",
     email:"",
     password:"",
@@ -63,12 +63,13 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     // const userName: string = JSON.parse(localStorage.getItem("userName"));
     // const userName: string = JSON.parse(JSON.stringify(localStorage.getItem("userName")));
     const userName: string | null = localStorage.getItem("userName");
+    const userEmail: string | null = localStorage.getItem("userEmail");
     // setUser(user);
-    if (userId && userName) {
+    if (userId && userName && userEmail) {
       setUser({
-        id: JSON.parse(userId),
+        _id: JSON.parse(userId),
         name: JSON.parse(userName),
-        email: "",
+        email: JSON.parse(userEmail),
         // password: "",
       });
     }
@@ -87,13 +88,14 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     const response: ISessionUser = await postRequest(`${VITE_BACKEND_URL}/register`, registerInfo);
     
     // localStorage.setItem("user", JSON.stringify(response));
-    localStorage.setItem("userId", JSON.stringify(response.id));
-    // localStorage.setItem("userId", response.id);
+    localStorage.setItem("userId", JSON.stringify(response._id));
+    // localStorage.setItem("userId", response._id);
     // localStorage.setItem("userName", JSON.stringify(response.name));
     localStorage.setItem("userName", response.name);
+    localStorage.setItem("userEmail", response.email);
     // setUser(response);
     setUser({
-      id: response.id,
+      _id: response._id,
       name: response.name,
       email: response.email,
       // password: response.password,
@@ -106,16 +108,16 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     // localStorage.setItem("user", JSON.stringify(response));
 
 
-    localStorage.setItem("userId", JSON.stringify(response.id));
-    // localStorage.setItem("userId", response.id);
+    localStorage.setItem("userId", JSON.stringify(response._id));
+    // localStorage.setItem("userId", response._id);
 
 
     localStorage.setItem("userName", JSON.stringify(response.name));
     // localStorage.setItem("userName", response.name);
-    console.log("response:", response)
+    // console.log("response:", response)
     // setUser(response);
     setUser({
-      id: response.id,
+      _id: response._id,
       name: response.name,
       email: response.email,
       // password: response.password,
@@ -128,7 +130,7 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     localStorage.removeItem("userName");
     navigation("/login")
     setUser({
-      id: "",
+      _id: "",
       name: "",
       email: "",
     });

@@ -12,16 +12,19 @@ export const PotentialChat = () => {
       {
         !potentialChats.length ? null : (
           potentialChats.map(function(el: ISessionUser) {
-            return (
-              <div 
-                key={el.id} 
-                onClick={function() {
-                  createChat(user.id, el.id);
-                }}
-              >
-                <p><strong>Nombre: </strong>{el.name}</p>
-              </div>
-            );
+            // console.log("el:", el)
+            if (user._id !== el._id) {
+              return (
+                <div 
+                  key={el._id} 
+                  onClick={function() {
+                    createChat(user._id, el._id);
+                  }}
+                >
+                  <p><strong>Nombre: </strong>{el.name}</p>
+                </div>
+              );
+            }
           })
         )
       }

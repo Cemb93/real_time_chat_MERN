@@ -35,7 +35,7 @@ export async function login(req: Request, res: Response) {
       const token = await generarToken(existUser.email);
 
       const data = {
-        id: existUser._id,
+        _id: existUser._id,
         name: existUser.name,
         email: existUser.email,
         token: token,

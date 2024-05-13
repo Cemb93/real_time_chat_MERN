@@ -1,19 +1,15 @@
 export interface ContextProviderProps {
   children: React.ReactNode
   // user?: Record<string, string>
-  user: ISessionUser | null
+  user?: ISessionUser | null
 }
 
 export interface ISessionUser {
-  id: string
+  _id: string
   name: string
   email: string
   password?: string
 }
-
-// type PropsUser = Pick<ISessionUser, 'email' | 'password'>
-
-// export interface ISessionUser extends PropsUser {}
 
 export interface TAuthContext {
   // user: Record<string, string> // ? SE USA CUANDO ES UN OBJETO QUE CONTIENE LO QUE SEA
@@ -30,8 +26,8 @@ export interface TAuthContext {
 
 export type TChatContext = {
   // userChats: Record<string, string>[]
-  // userChats: ISessionUser[]
-  userChats: IUserChat[]
+  userChats: IChats[]
+  // userChats: IUserChat[]
   potentialChats: ISessionUser[]
   // createChat: (firstId: string, secondId: string) => Promise<void>
   createChat: (firstId: string, secondId: string) => void
@@ -44,4 +40,6 @@ export interface IChats {
   secondId?: string,
 }
 
-export interface IUserChat extends IChats, ISessionUser {}
+// type OmitPropChat = Omit<IChats, '_id'>
+
+// export interface IUserChat extends OmitPropChat, ISessionUser {}

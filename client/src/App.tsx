@@ -11,14 +11,14 @@ import { NavBar } from "./components/NavBar";
 
 function App() {
   const { user } = useContext(AuthContext);
-  // console.log("user - App:", user.name)
+  // console.log("user - App:", user)
 
   return (
     <ChatContextProvider user={user}>
       <NavBar/>
       <Container className="text-secondary">
         <Routes>
-          <Route path="/" element={user.name ? <Chat /> : <Login />} />
+          <Route path="/login" element={user.name ? <Chat /> : <Login />} />
           <Route path="/register" element={user.name ? <Chat /> : <Register />} />
           <Route path="/login" element={user.name ? <Chat /> : <Login />} />
           <Route path="*" element={<Navigate to="/" />} />

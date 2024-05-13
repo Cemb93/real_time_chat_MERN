@@ -5,8 +5,8 @@ import { IChats, ISessionUser } from "../interface";
 export function useFetchRecipient(chat: IChats, user: ISessionUser) {
   // console.log("chat:", chat.members)
   const [recipentUser, setRecipentUser] = useState<ISessionUser | null>(null);
-  const recipientId = chat.members && chat.members.find(function(id: string) {
-    return id !== user.id;
+  const recipientId = chat.members && chat.members.find(function(_id: string) {
+    return _id !== user._id;
   });
   // console.log("recipientId:", recipientId)
 

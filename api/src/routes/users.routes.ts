@@ -12,5 +12,5 @@ const USERS = "users";
 
 usersRouter.post(`/${REGISTER}`, register);
 usersRouter.post(`/${LOGIN}`, login);
-usersRouter.get(`/${USERS}/:id`, detail);
+usersRouter.get(`/${USERS}/:_id`, detail);
 usersRouter.get(`/${USERS}`, getAllUsers);

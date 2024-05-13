@@ -1,4 +1,4 @@
-import { ISessionUser } from "../interface";
+import { IChats, ISessionUser } from "../interface";
 
 const { VITE_BACKEND_URL } = import.meta.env;
 export const BACK_END_URL = VITE_BACKEND_URL;
@@ -6,23 +6,10 @@ export const BACK_END_URL = VITE_BACKEND_URL;
 export const CHAT = "chats";
 export const MESSAGE = "messages";
 
-export async function postRequest(url: string, post: ISessionUser | string) {
-  console.log("post:", JSON.parse(JSON.stringify(post)))
+export async function postRequest(url: string, post: ISessionUser) {
+  // console.log("post:", JSON.parse(JSON.stringify(post)))
+  // console.log("post - 2:", post)
   try {
-    if (typeof post === "string") {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(post),
-      });
-    
-      const data = await response.json();
-      console.log("data:", data)
-    
-      return data;
-    }
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -30,13 +17,40 @@ export async function postRequest(url: string, post: ISessionUser | string) {
       },
       body: JSON.stringify(post),
     });
+
+    if (response.ok) {
+      const data = await response.json();
+      // console.log("data:", data)
+    
+      return data;
+    }
   
-    const data = await response.json();
-    console.log("data:", data)
-  
-    return data;
   } catch (error) {
     console.log('Error en postRequest por:', error)
+  }
+}
+
+export async function postChatRequest(url: string, post: IChats) {
+  console.log("post:", JSON.parse(JSON.stringify(post)))
+  console.log("post - 2:", post)
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(post),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("data:", data)
+    
+      return data;
+    }
+  
+  } catch (error) {
+    console.log('Error en postChatRequest por:', error)
   }
 }
 

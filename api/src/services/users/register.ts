@@ -35,7 +35,7 @@ export async function register(req: Request, res: Response) {
     if (newUser) {
       const token = await generarToken(newUser.email);
       return res.status(201).json({
-        id: newUser._id,
+        _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
         token: token,
