@@ -40,7 +40,8 @@ export type TChatContext = {
     currentChatId: string, 
     // setTextMessage: (textMessage: string) => string
     setTextMessage: (textMessage: string) => void
-  ) => void
+  ) => void,
+  onlineUsers: IOnlineUser[]
 }
 
 export interface IChats {
@@ -60,4 +61,18 @@ export interface IMessages {
   senderId: string,
   text: string,
   createdAt: string,
+}
+
+export interface IOnlineUser {
+  userId: string
+  socketId: string
+}
+
+export interface IMessagesInTimeReal {
+  _id: string
+  chatId: string
+  senderId: string
+  text: string
+  createdAt: string
+  recipientId: string
 }

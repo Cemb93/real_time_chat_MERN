@@ -1,6 +1,8 @@
 import { Stack } from "react-bootstrap";
 import { useFetchRecipient } from "../../hooks/useFetchRecipient";
 import { IChats, ISessionUser } from "../../interface";
+import { useContext } from "react";
+import { ChatContext } from "../../context/ChatContext";
 
 export const UserChat = (
   {chat, user}:
@@ -9,6 +11,11 @@ export const UserChat = (
   // console.log("chat:", chat)
   const recipentUser = useFetchRecipient(chat, user);
   // console.log("recipentUser:", recipentUser)
+  const { onlineUsers } = useContext(ChatContext);
+
+  const isOnline = onlineUsers.some(function(user) {
+    return user.userId === recipentUser?._id;
+  });
   return (
     <Stack
       direction="horizontal"
@@ -23,6 +30,9 @@ export const UserChat = (
         </div>
         <p>FECHA</p>
         <p>NOTIFICACION O MENSAJES</p>
+        {/* //* ACA SE INDICA SI EL USUARIO ESTA ONLINE */}
+        {/* //! PERO FALTAN LOS ESTILOS */}
+        <p className={isOnline ? "user-online" : ""}></p>
       </div>
     </Stack>
   )

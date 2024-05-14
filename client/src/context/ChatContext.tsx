@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { BACK_END_URL, CHAT, getRequest, postChatRequest, postRequest } from "../hooks/services";
-import { ContextProviderProps, IChats, IMessages, ISessionUser, TChatContext } from "../interface";
+import { ContextProviderProps, IChats, IMessages, IMessagesInTimeReal, IOnlineUser, ISessionUser, TChatContext } from "../interface";
+import { Socket, io } from "socket.io-client";
 
 export const ChatContext = createContext<TChatContext>({
   userChats: [],
@@ -10,6 +11,7 @@ export const ChatContext = createContext<TChatContext>({
   createChat: function() {},
   updateCurrentChat: function() {},
   sendTextMessage: function() {},
+  onlineUsers: [],
 });
 
 export function ChatContextProvider({ children, user }: ContextProviderProps) {
@@ -20,8 +22,63 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
   const [currentChats, setCurrentChats] = useState<IChats>({});
   const [messages, setMessages] = useState<IMessages[]>([]);
   const [newMessage, setNewMessage] = useState<IMessages>();
-  // console.log("currentChats:", currentChats)
-  // console.log("messages:", messages)
+  const [socket, setSocket] = useState<Socket>();
+  const [onlineUsers, setOnlineUsers] = useState<IOnlineUser[]>([]);
+  // console.log("socket:", socket)
+  // console.log("onlineUsers:", onlineUsers)
+  
+  // * SE INICIA SOCKET - IO
+  useEffect(function() {
+    const newSocket = io("http://localhost:3000");
+    setSocket(newSocket);
+    
+    return function() {
+      newSocket.disconnect();
+    }
+  }, [user]);
+
+  // ? ADD ONLINE USER
+  useEffect(function() {
+    if (!socket) return;
+    // console.log('user?._id:', user?._id);
+    socket.emit("addNewUser", user?._id);
+    socket.on("getOnlineUsers", function(online: IOnlineUser[]) {
+      console.log("online:", online)
+      setOnlineUsers(online);
+    });
+
+    return function() {
+      socket.off("getOnlineUsers");
+    }
+  }, [socket]);
+
+  // ! SEND MESSAGE
+  useEffect(function() {
+    if (!socket) return;
+    const recipientId = currentChats.members && currentChats.members.find(function(_id: string) {
+      return _id !== user?._id;
+    });
+    console.log("recipientId:", recipientId)
+    socket.emit("sendMessage", {
+      ...newMessage,
+      recipientId,
+    });
+  }, [newMessage]);
+
+  // * RECEIVE MESSAGE
+  useEffect(function() {
+    if (!socket) return;
+    socket.on("getMessage", function(ms: IMessagesInTimeReal) {
+      if (currentChats._id !== ms.chatId) return;
+      setMessages(function(messages) {
+        return [...messages, ms];
+      });
+    });
+
+    return function() {
+      socket.off("getMessage");
+    }
+  }, [socket, currentChats]);
 
   useEffect(function() {
     async function getUsers() {
@@ -131,6 +188,7 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
         messages,
         currentChats,
         sendTextMessage,
+        onlineUsers,
       }}
     >
       {children}

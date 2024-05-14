@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 export const PotentialChat = () => {
   const { user } = useContext(AuthContext);
-  const { potentialChats, createChat } = useContext(ChatContext);
+  const { potentialChats, createChat, onlineUsers } = useContext(ChatContext);
   // console.log("potentialChats:", potentialChats)
   return (
     <div className="d-flex justify-content-start">
@@ -22,6 +22,13 @@ export const PotentialChat = () => {
                   }}
                 >
                   <p><strong>Nombre: </strong>{el.name}</p>
+                  <span
+                    className={
+                      onlineUsers.some(function(online) {
+                        return online.userId === el._id;
+                      }) ? "user-online" : ""
+                    }
+                  ></span>
                 </div>
               );
             }
