@@ -20,7 +20,7 @@ export async function getMessages(req: Request, res: Response) {
         createdAt: formatDate(message.createdAt),
       }
     });
-    console.log("filterMessage:", filterMessage);
+    // console.log("filterMessage:", filterMessage);
 
     return res.status(200).json(filterMessage);
   } catch (error) {

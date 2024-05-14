@@ -9,6 +9,7 @@ export const ChatContext = createContext<TChatContext>({
   currentChats: {},
   createChat: function() {},
   updateCurrentChat: function() {},
+  sendTextMessage: function() {},
 });
 
 export function ChatContextProvider({ children, user }: ContextProviderProps) {
@@ -18,8 +19,9 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
   const [potentialChats, setPtentialChats] = useState<ISessionUser[]>([]);
   const [currentChats, setCurrentChats] = useState<IChats>({});
   const [messages, setMessages] = useState<IMessages[]>([]);
-  console.log("currentChats:", currentChats)
-  console.log("messages:", messages)
+  const [newMessage, setNewMessage] = useState<IMessages>();
+  // console.log("currentChats:", currentChats)
+  // console.log("messages:", messages)
 
   useEffect(function() {
     async function getUsers() {
@@ -29,8 +31,8 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
       
       const pChats = response.filter(function(el: ISessionUser) {
         const isChatCreated: {trueOrFalse: boolean} = {trueOrFalse: false};
-        console.log("user:", user?._id)
-        console.log("el:", el._id)
+        // console.log("user:", user?._id)
+        // console.log("el:", el._id)
         
         if (user?._id === el._id) return false;
         
@@ -46,7 +48,7 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
 
         return !isChatCreated.trueOrFalse;
       });
-      console.log("pChats:", pChats)
+      // console.log("pChats:", pChats)
 
       setPtentialChats(pChats);
     }
@@ -64,7 +66,30 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
 
     getMessages();
   }, [currentChats]);
-  // }, []);
+
+  const sendTextMessage = useCallback(async function(
+    textMessage: string, 
+    sender: ISessionUser, 
+    currentChatId: string, 
+    setTextMessage: (textMessage: string) => void
+    // setTextMessage: (textMessage: string) => string
+  ) {
+    if (!textMessage) console.log("You must type something...");
+    if (sender._id !== undefined) {
+      console.log("sender:", sender)
+      const response: IMessages = await postRequest(`${BACK_END_URL}/messages`, JSON.parse(JSON.stringify({
+        chatId: currentChatId,
+        senderId: sender._id,
+        text: textMessage,
+      })));
+  
+      setNewMessage(response);
+      setMessages(function(prev) {
+        return [...prev, response];
+      })
+      setTextMessage("");
+    }
+  }, []);
 
   const updateCurrentChat = useCallback(function(chat: IChats) {
     setCurrentChats(chat)
@@ -105,6 +130,7 @@ export function ChatContextProvider({ children, user }: ContextProviderProps) {
         updateCurrentChat,
         messages,
         currentChats,
+        sendTextMessage,
       }}
     >
       {children}

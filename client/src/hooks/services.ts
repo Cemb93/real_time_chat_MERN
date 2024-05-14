@@ -8,7 +8,7 @@ export const MESSAGE = "messages";
 
 export async function postRequest(url: string, post: ISessionUser) {
   // console.log("post:", JSON.parse(JSON.stringify(post)))
-  // console.log("post - 2:", post)
+  console.log("post - 2:", post)
   try {
     const response = await fetch(url, {
       method: "POST",

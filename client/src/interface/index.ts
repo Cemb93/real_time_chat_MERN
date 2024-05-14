@@ -34,6 +34,13 @@ export type TChatContext = {
   // createChat: (firstId: string, secondId: string) => Promise<void>
   createChat: (firstId: string, secondId: string) => void
   updateCurrentChat: (chat: IChats) => void
+  sendTextMessage: (
+    textMessage: string, 
+    sender: ISessionUser, 
+    currentChatId: string, 
+    // setTextMessage: (textMessage: string) => string
+    setTextMessage: (textMessage: string) => void
+  ) => void
 }
 
 export interface IChats {
