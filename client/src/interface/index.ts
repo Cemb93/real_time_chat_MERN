@@ -20,7 +20,8 @@ export interface TAuthContext {
   updateRegisterInfo: (info: ISessionUser) => void
   updateLoginInfo: (info: ISessionUser) => void
   registerUser: (e: React.FormEvent<HTMLFormElement>) => void
-  loginUser: (e: React.FormEvent<HTMLFormElement>) => void
+  // loginUser: (e: React.FormEvent<HTMLFormElement>) => void
+  loginUser: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   logoutUser: () => void
 }
 

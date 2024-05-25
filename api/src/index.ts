@@ -1,10 +1,14 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import "dotenv/config"
-const { DB } = process.env as VariablesEntorno;
+import { VariablesEntorno } from "./types/IEnv";
+const { DB, PORT, URL_CLIENT } = process.env as VariablesEntorno;
 import { connect } from 'mongoose';
 import { allRoutes } from "./routes";
-import { VariablesEntorno } from "./types/IEnv";
+import passport from 'passport'
+import expressSession from "express-session";
+import "./passport"; // Asegúrate de importar tu configuración de Passport
+
 const app: Application = express();
 
 const dbConexion = async (): Promise<void> => {
@@ -18,14 +22,31 @@ const dbConexion = async (): Promise<void> => {
   }
 }
 
-app.use(express.json());
-app.use(cors());
-app.use(allRoutes);
+app.use(
+  cors({
+    origin: URL_CLIENT,//* URL DEL FRONT
+    // origin: "*",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
 
-const PORT = 3001
+app.use(express.json());
+
+app.use(
+  expressSession({
+    secret: "cd8ef67f-7012-4d19-8b9a-04ce60a0d54d",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(allRoutes);
 
 dbConexion().then(function() {
   app.listen(PORT, function() {
-    console.log(`Listening on PORT:`, PORT);
+    console.log(`Listening on PORT:`, Number(PORT));
   });
 });

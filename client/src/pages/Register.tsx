@@ -1,9 +1,16 @@
 import { useContext } from "react"
 import { Alert, Button, Col, Form, Row, Stack } from "react-bootstrap"
 import { AuthContext } from "../context/AuthContext"
+const { VITE_BACKEND_URL } = import.meta.env;
 
 export const Register = () => {
   const { registerInfo, updateRegisterInfo, registerUser } = useContext(AuthContext);
+  function googleAuth() {
+    window.open(
+      `${VITE_BACKEND_URL}/auth/google/callback`,
+      "_self"
+    );
+  }
 
   return (
     <>
@@ -27,6 +34,9 @@ export const Register = () => {
               }} />
               <Button variant="primary" type="submit">
                 Register
+              </Button>
+              <Button variant="primary" type="submit" onClick={googleAuth}>
+                Register with google
               </Button>
               <Alert variant="danger">
                 <p>Error</p>
