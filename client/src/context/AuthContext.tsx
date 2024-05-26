@@ -51,25 +51,27 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     email:"",
     password:"",
   });
-  // async function getUserWithGoogle() {
-  //   try {
-  //     const url = `${VITE_BACKEND_URL}/login/success`;
-  //     console.log("url:", url)
-  //     const response = await fetch(url, {
-  //       credentials: "include",
-  //     });
-  //     console.log("response:", response)
-  //     const data = await response.json();
-  //     console.log("data:", data)
-  //     setUser(data)
-  //   } catch (error) {
-  //     console.log("Error en getUserWithGoogle por:", error)
-  //   }
-  // }
+  async function getUserWithGoogle() {
+    try {
+      const url = `${VITE_BACKEND_URL}/login`;
+      const response = await fetch(url, {
+        credentials: "include",
+      });
+      // console.log("response:", response)
+      const data = await response.json();
+      // console.log("data:", data)
+
+      localStorage.setItem("userIdWithGoogle", JSON.stringify(data._id));
+      localStorage.setItem("userNameWithGoogle", JSON.stringify(data.name));
+      setUser(data)
+    } catch (error) {
+      console.log("Error en getUserWithGoogle por:", error)
+    }
+  }
   
-  // useEffect(function() {
-  //   getUserWithGoogle();
-  // }, []);
+  useEffect(function() {
+    getUserWithGoogle();
+  }, []);
 
   useEffect(function() {
     // const user: ISessionUser = JSON.parse(JSON.stringify(localStorage.getItem("user")));
@@ -152,6 +154,8 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     // localStorage.removeItem("user");
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
+    localStorage.removeItem("userIdWithGoogle");
+    localStorage.removeItem("userNameWithGoogle");
     navigation("/login")
     setUser({
       _id: "",

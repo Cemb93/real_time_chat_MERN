@@ -29,39 +29,39 @@ usersRouter.get("/auth/google",
   })
 );
 
-// * Callback from Google.
-// usersRouter.get(
-//   // GOOGLE_CALLBACK_URL,
-//   '/auth/google/callback',
-//   passport.authenticate("google"),
-// );
-
+// * Callback from Google
 usersRouter.get(
   // GOOGLE_CALLBACK_URL,
   '/auth/google/callback',
   passport.authenticate("google", {
     // successRedirect: "/login/success",
-    successRedirect: `${URL_CLIENT}/login`,//* URL DEL FRONT
+    successRedirect: `${URL_CLIENT}`,//* URL DEL FRONT
     // failureRedirect: "/login/failed",
-    // failureRedirect: `${URL_CLIENT}/login`,//* URL DEL FRONT
+    failureRedirect: `${URL_CLIENT}/login`,//* URL DEL FRONT
   }),
   (req, res) => {
     // Autenticación exitosa, redirige al cliente
-    return res.redirect(URL_CLIENT);//* URL DEL FRONT
+    console.log("callback:", req.user)
+    return res.status(200).json(req.user);
+    // return res.redirect(URL_CLIENT);//* URL DEL FRONT
   }
 );
 
-usersRouter.get("/login/sucess",async(req,res)=>{
-  if(req.user){
-      res.status(200).json({message:"user Login",user:req.user})
-  }else{
-      res.status(400).json({message:"Not Authorized"})
+usersRouter.get("/login", async (req, res) => {
+  // console.log("login", req.user)
+  // console.log("isAuthenticated", req.isAuthenticated())
+  if (req.isAuthenticated()) {
+    return res.status(200).json(req.user);
+  } else {
+    return res.status(401).json({ message: 'Not Authorized' });
   }
-})
+});
 
-usersRouter.get("/logout",(req,res,next)=>{
-  req.logout(function(err){
-      if(err){return next(err)}
-      res.redirect(`${URL_CLIENT}`);
-  })
-})
+usersRouter.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    return res.redirect(`${URL_CLIENT}`);
+  });
+});

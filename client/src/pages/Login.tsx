@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { Button, Col, Form, Row, Stack } from "react-bootstrap"
 import { AuthContext } from "../context/AuthContext"
 const { VITE_BACKEND_URL } = import.meta.env;
@@ -8,15 +8,35 @@ export const Login = () => {
   function loginWithGoogle() {
     // window.location.href = 'http://localhost:6005/auth/google';
     // window.location.href = `${VITE_BACKEND_URL}/auth/google`;
-    window.open(
+    const session = window.open(
       `${VITE_BACKEND_URL}/auth/google/callback`,
       "_self"
     );
+    localStorage.setItem("sessionWithGoogle", JSON.stringify(session))
+    console.log("loginWithGoogle", JSON.stringify(session))
     // window.open(
     //   `${VITE_BACKEND_URL}/auth/google`,
     //   "_self"
     // );
   }
+
+  useEffect(() => {
+    // const fetchUser = async () => {
+    //   try {
+    //     const response = await fetch('http://localhost:6005/login', {
+    //       credentials: "include", // Esto permite que las cookies de sesión se envíen con la solicitud
+    //     });
+
+    //     const session = await response.json();
+    //     localStorage.setItem("sessionWithGoogle", JSON.stringify(session.user))
+    //     // setUser(response.data.user);
+    //   } catch (error) {
+    //     console.error('Error fetching user:', error);
+    //   }
+    // };
+
+    // fetchUser();
+  }, []);
   return (
     <>
       {/* <Form onSubmit={loginUser}> */}

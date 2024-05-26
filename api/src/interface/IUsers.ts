@@ -8,7 +8,7 @@ export interface IUsers {
 export interface IProfileGoogle {
   id?: string
   displayName: string// * Nombre completo
-  name: {
+  name?: {
     familyName: string// Apellido
     givenName: string// Nombre
   }
@@ -16,11 +16,11 @@ export interface IProfileGoogle {
     value: string
     verified: boolean
   }[]
-  photos: {
+  photos?: {
     value: string
   }[]
-  provider: string
-  _json: {
+  provider?: string
+  _json?: {
     name: string// * Nombre completo
     picture: string
     email: string
