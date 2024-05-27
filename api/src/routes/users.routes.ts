@@ -48,7 +48,7 @@ usersRouter.get(
 );
 
 usersRouter.get("/login", async (req, res) => {
-  // console.log("login", req.user)
+  console.log("login", req.user)
   // console.log("isAuthenticated", req.isAuthenticated())
   if (req.isAuthenticated()) {
     return res.status(200).json(req.user);
@@ -58,10 +58,13 @@ usersRouter.get("/login", async (req, res) => {
 });
 
 usersRouter.get("/logout", (req, res, next) => {
+  console.log("logout:", req.user)
   req.logout((err) => {
+    console.log("Error CERRANDO SESSION:", err)
     if (err) {
       return next(err);
     }
-    return res.redirect(`${URL_CLIENT}`);
+    console.log("OK CERRANDO SESSION:")
+    return res.redirect(`${URL_CLIENT}/login`);
   });
 });

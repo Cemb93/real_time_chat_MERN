@@ -51,25 +51,29 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     email:"",
     password:"",
   });
-  async function getUserWithGoogle() {
-    try {
-      const url = `${VITE_BACKEND_URL}/login`;
-      const response = await fetch(url, {
-        credentials: "include",
-      });
-      // console.log("response:", response)
-      const data = await response.json();
-      // console.log("data:", data)
-
-      localStorage.setItem("userIdWithGoogle", JSON.stringify(data._id));
-      localStorage.setItem("userNameWithGoogle", JSON.stringify(data.name));
-      setUser(data)
-    } catch (error) {
-      console.log("Error en getUserWithGoogle por:", error)
-    }
-  }
   
   useEffect(function() {
+    async function getUserWithGoogle() {
+      try {
+        const url = `${VITE_BACKEND_URL}/login`;
+        const response = await fetch(url, {
+          credentials: "include",
+        });
+        // console.log("response:", response)
+        const data: ISessionUser = await response.json();
+        // console.log("data:", data)
+
+        // *  SE GUARDA EN EL localStorage COMO = "664061bdd4e046aaa5ec7929"
+        // localStorage.setItem("userIdWithGoogle", JSON.stringify(data._id));
+        // * SE GUARDA EN EL localStorage COMO = demo_uno
+        // localStorage.setItem("userNameWithGoogle", JSON.parse(JSON.stringify(data.name)));
+
+        localStorage.setItem("loginWithGoogle", JSON.stringify(data));
+        setUser(data)
+      } catch (error) {
+        console.log("Error en getUserWithGoogle por:", error)
+      }
+    }
     getUserWithGoogle();
   }, []);
 
@@ -123,7 +127,6 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     });
   }, [registerInfo]);
   
-  // const loginUser = useCallback(async function(e: React.FormEvent<HTMLFormElement>): Promise<void> {
   const loginUser = useCallback(async function(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
     e.preventDefault();
     const response: ISessionUser = await postRequest(`${VITE_BACKEND_URL}/login`, loginInfo);
@@ -146,16 +149,20 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     });
   }, [loginInfo]);
 
-  const logoutUser = useCallback(function(): void {
-    window.open(
-      `${VITE_BACKEND_URL}/logout`,
-      "_self"
-    );
+  // const logoutUser = useCallback(async function(): void {
+  const logoutUser = useCallback(async function(): Promise<void> {
+    await fetch(`${VITE_BACKEND_URL}/logout`);
+    console.log("CERRANDO SESSION")
+    // window.open(
+    //   `${VITE_BACKEND_URL}/logout`,
+    //   "_self"
+    // );
     // localStorage.removeItem("user");
     localStorage.removeItem("userId");
     localStorage.removeItem("userName");
     localStorage.removeItem("userIdWithGoogle");
     localStorage.removeItem("userNameWithGoogle");
+    localStorage.removeItem("loginWithGoogle");
     navigation("/login")
     setUser({
       _id: "",

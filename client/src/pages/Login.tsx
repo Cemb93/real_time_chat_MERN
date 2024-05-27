@@ -59,9 +59,9 @@ export const Login = () => {
               {/* <Button variant="primary" type="submit" onClick={loginUser}> */}
                 Login
               </Button>
-              <button type="button" onClick={loginWithGoogle}>
+              <Button type="button" onClick={loginWithGoogle}>
                 Login with google
-              </button>
+              </Button>
             </Stack>
           </Col>
         </Row>
