@@ -1,5 +1,6 @@
 export interface IUsers {
   _id?: string
+  googleId?: string
   name: string
   email: string
   password: string

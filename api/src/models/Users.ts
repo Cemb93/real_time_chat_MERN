@@ -2,6 +2,9 @@ import { model, Schema } from "mongoose";
 import { IUsers } from "../interface/IUsers";
 
 export const usersModel = model<IUsers>("user", new Schema<IUsers>({
+  googleId: {
+    type: String,
+  },
   name: {
     type: String,
   },

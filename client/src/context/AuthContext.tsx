@@ -7,18 +7,21 @@ const { VITE_BACKEND_URL } = import.meta.env;
 export const AuthContext = createContext<TAuthContext>({
   user: {
     _id: "",
+    googleId: "",
     name: "",
     email: "",
     // password: "",
   },
   registerInfo: {
     _id: "",
+    googleId: "",
     name: "",
     email: "",
     password: "",
   },
   loginInfo: {
     _id: "",
+    googleId: "",
     name: "",
     email: "",
     password: "",
@@ -29,76 +32,53 @@ export const AuthContext = createContext<TAuthContext>({
   registerUser: function() {},
   loginUser: function() {},
   logoutUser: function() {},
+  getUserWithGoogle: function() {},
 });
 
 export function AuthContextProvider({ children }: ContextProviderProps) {
   const navigation = useNavigate();
   const [user, setUser] = useState<ISessionUser>({
     _id: "",
+    googleId: "",
     name:"",
     email:"",
     // password:"",
   });
   const [registerInfo, setRegisterInfo] = useState<ISessionUser>({
     _id: "",
+    googleId: "",
     name:"",
     email:"",
     password:"",
   });
   const [loginInfo, setLoginInfo] = useState<ISessionUser>({
     _id: "",
+    googleId: "",
     name: "",
     email:"",
     password:"",
   });
   
-  useEffect(function() {
-    async function getUserWithGoogle() {
-      try {
-        const url = `${VITE_BACKEND_URL}/login`;
-        const response = await fetch(url, {
-          credentials: "include",
-        });
-        // console.log("response:", response)
+  async function getUserWithGoogle() {
+    try {
+      const url = `${VITE_BACKEND_URL}/login`;
+      const response = await fetch(url, {
+        credentials: "include",
+      });
+      // console.log("response:", response)
+      if (response.ok) {
         const data: ISessionUser = await response.json();
-        // console.log("data:", data)
-
-        // *  SE GUARDA EN EL localStorage COMO = "664061bdd4e046aaa5ec7929"
-        // localStorage.setItem("userIdWithGoogle", JSON.stringify(data._id));
-        // * SE GUARDA EN EL localStorage COMO = demo_uno
-        // localStorage.setItem("userNameWithGoogle", JSON.parse(JSON.stringify(data.name)));
 
         localStorage.setItem("loginWithGoogle", JSON.stringify(data));
         setUser(data)
-      } catch (error) {
-        console.log("Error en getUserWithGoogle por:", error)
       }
+    } catch (error) {
+      console.log("Error en getUserWithGoogle por:", error)
     }
-    getUserWithGoogle();
-  }, []);
-
-  useEffect(function() {
-    // const user: ISessionUser = JSON.parse(JSON.stringify(localStorage.getItem("user")));
-    // const userId: string = JSON.parse(JSON.stringify(localStorage.getItem("user")));
-    // const userId: string = JSON.parse(localStorage.getItem("userId"));
-    // const userId: string = JSON.stringify(localStorage.getItem("userId"));// !FORMATO JSON
-    const userId: string | null = localStorage.getItem("userId");
-    // const userId: string = JSON.parse(JSON.stringify(localStorage.getItem("userId")));
-    // console.log("getItem - userId:", userId)
-    // const userName: string = JSON.parse(localStorage.getItem("userName"));
-    // const userName: string = JSON.parse(JSON.stringify(localStorage.getItem("userName")));
-    const userName: string | null = localStorage.getItem("userName");
-    const userEmail: string | null = localStorage.getItem("userEmail");
-    // setUser(user);
-    if (userId && userName && userEmail) {
-      setUser({
-        _id: JSON.parse(userId),
-        name: JSON.parse(userName),
-        email: JSON.parse(userEmail),
-        // password: "",
-      });
-    }
-  }, []);
+  }
+  // useEffect(function() {
+  //   getUserWithGoogle();
+  // }, []);
 
   const updateRegisterInfo = useCallback(function(info: ISessionUser): void {
     setRegisterInfo(info);
@@ -130,23 +110,11 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
   const loginUser = useCallback(async function(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
     e.preventDefault();
     const response: ISessionUser = await postRequest(`${VITE_BACKEND_URL}/login`, loginInfo);
-    // localStorage.setItem("user", JSON.stringify(response));
-
-
-    localStorage.setItem("userId", JSON.stringify(response._id));
-    // localStorage.setItem("userId", response._id);
-
-
-    localStorage.setItem("userName", JSON.stringify(response.name));
-    // localStorage.setItem("userName", response.name);
+    localStorage.setItem("loginWithGoogle", JSON.stringify(response));
     // console.log("response:", response)
-    // setUser(response);
-    setUser({
-      _id: response._id,
-      name: response.name,
-      email: response.email,
-      // password: response.password,
-    });
+    
+    navigation("/")
+    setUser(response);
   }, [loginInfo]);
 
   // const logoutUser = useCallback(async function(): void {
@@ -157,15 +125,11 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     //   `${VITE_BACKEND_URL}/logout`,
     //   "_self"
     // );
-    // localStorage.removeItem("user");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userIdWithGoogle");
-    localStorage.removeItem("userNameWithGoogle");
     localStorage.removeItem("loginWithGoogle");
     navigation("/login")
     setUser({
       _id: "",
+      googleId: "",
       name: "",
       email: "",
     });
@@ -183,6 +147,7 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
         updateLoginInfo,
         loginInfo,
         loginUser,
+        getUserWithGoogle,
       }}
     >
       {children}

@@ -17,7 +17,11 @@ passport.use(
       passReqToCallback: true // Asegúrate de incluir esto
     },
     async function (
-      _req: Request, _accessToken: string, _refreshToken: string, profile: Profile, done: Function
+      _req: Request, 
+      _accessToken: string, 
+      _refreshToken: string, 
+      profile: Profile, 
+      done: Function
     ) {
       // console.log("profile:", profile)
       // console.log("req:", req)
@@ -30,6 +34,7 @@ passport.use(
           })
           if (!user) {
             const newUser: IUsers = {
+              googleId: profile.id,
               name: profile.displayName,
               email: profile.emails[0].value,
               password: "",

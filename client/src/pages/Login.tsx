@@ -4,16 +4,15 @@ import { AuthContext } from "../context/AuthContext"
 const { VITE_BACKEND_URL } = import.meta.env;
 
 export const Login = () => {
-  const { loginInfo, loginUser, updateLoginInfo } = useContext(AuthContext)
+  const { loginInfo, loginUser, updateLoginInfo, getUserWithGoogle } = useContext(AuthContext)
   function loginWithGoogle() {
-    // window.location.href = 'http://localhost:6005/auth/google';
-    // window.location.href = `${VITE_BACKEND_URL}/auth/google`;
     const session = window.open(
       `${VITE_BACKEND_URL}/auth/google/callback`,
       "_self"
     );
     localStorage.setItem("sessionWithGoogle", JSON.stringify(session))
     console.log("loginWithGoogle", JSON.stringify(session))
+    getUserWithGoogle()
     // window.open(
     //   `${VITE_BACKEND_URL}/auth/google`,
     //   "_self"
@@ -39,7 +38,6 @@ export const Login = () => {
   }, []);
   return (
     <>
-      {/* <Form onSubmit={loginUser}> */}
       <Form>
         <Row style={{
           height: "100vh",
@@ -56,7 +54,6 @@ export const Login = () => {
                 updateLoginInfo({ ...loginInfo, password: e.target.value });
               }} />
               <Button variant="primary" type="submit" onClick={(e) => loginUser(e)}>
-              {/* <Button variant="primary" type="submit" onClick={loginUser}> */}
                 Login
               </Button>
               <Button type="button" onClick={loginWithGoogle}>

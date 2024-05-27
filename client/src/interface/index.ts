@@ -6,6 +6,7 @@ export interface ContextProviderProps {
 
 export interface ISessionUser {
   _id: string
+  googleId?: string
   name: string
   email: string
   password?: string
@@ -23,6 +24,7 @@ export interface TAuthContext {
   // loginUser: (e: React.FormEvent<HTMLFormElement>) => void
   loginUser: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   logoutUser: () => void
+  getUserWithGoogle: () => void
 }
 
 export type TChatContext = {
