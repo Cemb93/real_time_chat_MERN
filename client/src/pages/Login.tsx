@@ -12,7 +12,7 @@ export const Login = () => {
     );
     localStorage.setItem("sessionWithGoogle", JSON.stringify(session))
     console.log("loginWithGoogle", JSON.stringify(session))
-    getUserWithGoogle()
+    // getUserWithGoogle()
     // window.open(
     //   `${VITE_BACKEND_URL}/auth/google`,
     //   "_self"

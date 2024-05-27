@@ -2,6 +2,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { postRequest } from "../hooks/services";
 import { ContextProviderProps, ISessionUser, TAuthContext } from "../interface";
 import { useNavigate } from "react-router-dom";
+import { removeUserFromLocalStorage } from "../localStorage/removeItems";
 const { VITE_BACKEND_URL } = import.meta.env;
 
 export const AuthContext = createContext<TAuthContext>({
@@ -76,9 +77,9 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
       console.log("Error en getUserWithGoogle por:", error)
     }
   }
-  // useEffect(function() {
-  //   getUserWithGoogle();
-  // }, []);
+  useEffect(function() {
+    getUserWithGoogle();
+  }, []);
 
   const updateRegisterInfo = useCallback(function(info: ISessionUser): void {
     setRegisterInfo(info);
@@ -117,15 +118,22 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     setUser(response);
   }, [loginInfo]);
 
+  function logOutWithGoogle() {
+    window.open(
+      `${VITE_BACKEND_URL}/logout`,
+      "_self"
+    );
+  }
+
   // const logoutUser = useCallback(async function(): void {
   const logoutUser = useCallback(async function(): Promise<void> {
-    await fetch(`${VITE_BACKEND_URL}/logout`);
-    console.log("CERRANDO SESSION")
-    // window.open(
-    //   `${VITE_BACKEND_URL}/logout`,
-    //   "_self"
-    // );
-    localStorage.removeItem("loginWithGoogle");
+    console.log("user:", user)
+    if (user.googleId) {
+      console.log("CERRANDO SESSION CON USUARIO DE GOOGLE")
+      logOutWithGoogle();
+    }
+    console.log("CERRANDO SESSION CON USUARIO LOCAR")
+    removeUserFromLocalStorage();
     navigation("/login")
     setUser({
       _id: "",
@@ -133,6 +141,7 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
       name: "",
       email: "",
     });
+    console.log("user:", user)
   }, []);
 
   return (

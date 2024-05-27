@@ -58,7 +58,7 @@ usersRouter.get("/login", async (req, res) => {
 });
 
 usersRouter.get("/logout", (req, res, next) => {
-  console.log("logout:", req.user)
+  console.log("logout")
   req.logout((err) => {
     console.log("Error CERRANDO SESSION:", err)
     if (err) {
