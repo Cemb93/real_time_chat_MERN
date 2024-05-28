@@ -17,15 +17,35 @@ function App() {
     <ChatContextProvider user={user}>
       <NavBar/>
       <Container className="text-secondary">
-        <Routes>
-          <Route path="/" element={<Chat />} />
+        {
+          !user._id ? (
+            <Routes>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              {/* <Route path="/login" element={user.name ? <Chat /> : <Login />} />
+              <Route path="/register" element={user.name ? <Chat /> : <Register />} />
+              <Route path="/login" element={user.name ? <Chat /> : <Login />} /> */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          ) : (
+            <Routes>
+              <Route path="/dashboard" element={<Chat />} />
+              {/* <Route path="/login" element={user.name ? <Chat /> : <Login />} />
+              <Route path="/register" element={user.name ? <Chat /> : <Register />} />
+              <Route path="/login" element={user.name ? <Chat /> : <Login />} /> */}
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          )
+        }
+        {/* <Routes>
+          <Route path="/dashboard" element={<Chat />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/login" element={user.name ? <Chat /> : <Login />} />
+          <Route path="/login" element={user.name ? <Chat /> : <Login />} />
           <Route path="/register" element={user.name ? <Chat /> : <Register />} />
-          <Route path="/login" element={user.name ? <Chat /> : <Login />} /> */}
+          <Route path="/login" element={user.name ? <Chat /> : <Login />} />
           <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        </Routes> */}
       </Container>
     </ChatContextProvider>
   );

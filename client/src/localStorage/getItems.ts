@@ -19,7 +19,9 @@ export const getUserIdGoogle = (): string | null => {
   if (userJson) {
     try {
       const user: ISessionUser = JSON.parse(userJson);
-      return user.name;
+      if (user.googleId) {
+        return user.googleId;
+      }
     } catch (error) {
       console.error("Error parsing JSON name:", error);
       return null;

@@ -15,7 +15,7 @@ export const Chat = () => {
       <Container>
         <PotentialChat />
         {
-          userChats.length === 0 ? null : (
+          !user._id && userChats.length === 0 ? null : (
             <div>
               <Stack
                 direction="horizontal"

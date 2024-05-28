@@ -59,6 +59,7 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     email:"",
     password:"",
   });
+  // const [logOutUser, setLogOutUser] = useState(false);
   
   async function getUserWithGoogle() {
     try {
@@ -66,9 +67,10 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
       const response = await fetch(url, {
         credentials: "include",
       });
-      // console.log("response:", response)
-      if (response.ok) {
+      console.log("response:", response)
+      if (response.ok && !user.googleId) {
         const data: ISessionUser = await response.json();
+        console.log("data:", data)
 
         localStorage.setItem("loginWithGoogle", JSON.stringify(data));
         setUser(data)
@@ -77,8 +79,11 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
       console.log("Error en getUserWithGoogle por:", error)
     }
   }
+  console.log("user:", !user._id)
   useEffect(function() {
-    getUserWithGoogle();
+    if (!user._id) {
+      getUserWithGoogle();
+    }
   }, []);
 
   const updateRegisterInfo = useCallback(function(info: ISessionUser): void {
@@ -128,20 +133,28 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
   // const logoutUser = useCallback(async function(): void {
   const logoutUser = useCallback(async function(): Promise<void> {
     console.log("user:", user)
-    if (user.googleId) {
+    if (user && user.googleId) {
       console.log("CERRANDO SESSION CON USUARIO DE GOOGLE")
       logOutWithGoogle();
+      navigation("/login")
+      setUser({
+        _id: "",
+        googleId: "",
+        name: "",
+        email: "",
+      });
+    } else if (user && !user.googleId) {
+      console.log("CERRANDO SESSION CON USUARIO LOCAl")
+      removeUserFromLocalStorage();
+      navigation("/login")
+      setUser({
+        _id: "",
+        googleId: "",
+        name: "",
+        email: "",
+      });
+      console.log("user:", user)
     }
-    console.log("CERRANDO SESSION CON USUARIO LOCAR")
-    removeUserFromLocalStorage();
-    navigation("/login")
-    setUser({
-      _id: "",
-      googleId: "",
-      name: "",
-      email: "",
-    });
-    console.log("user:", user)
   }, []);
 
   return (

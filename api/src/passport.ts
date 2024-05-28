@@ -12,9 +12,9 @@ passport.use(
       {
       clientID: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_SECRET_CLIENT,
-      callbackURL: '/auth/google/callback',// ? http://localhost:6005/auth/google/callback
+      callbackURL: env.GOOGLE_CALLBACK_URL,
       scope: ["profile", "email"],
-      passReqToCallback: true // Asegúrate de incluir esto
+      passReqToCallback: true,
     },
     async function (
       _req: Request, 
@@ -24,9 +24,6 @@ passport.use(
       done: Function
     ) {
       // console.log("profile:", profile)
-      // console.log("req:", req)
-      // console.log("accessToken:", accessToken)
-      // console.log("refreshToken:", refreshToken)
       if (profile && profile.emails) {
         try {
           let user: IUsers | null = await usersModel.findOne({

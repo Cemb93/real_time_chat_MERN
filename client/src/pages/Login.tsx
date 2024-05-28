@@ -4,15 +4,12 @@ import { AuthContext } from "../context/AuthContext"
 const { VITE_BACKEND_URL } = import.meta.env;
 
 export const Login = () => {
-  const { loginInfo, loginUser, updateLoginInfo, getUserWithGoogle } = useContext(AuthContext)
+  const { loginInfo, loginUser, updateLoginInfo } = useContext(AuthContext)
   function loginWithGoogle() {
-    const session = window.open(
+    window.open(
       `${VITE_BACKEND_URL}/auth/google/callback`,
       "_self"
     );
-    localStorage.setItem("sessionWithGoogle", JSON.stringify(session))
-    console.log("loginWithGoogle", JSON.stringify(session))
-    // getUserWithGoogle()
     // window.open(
     //   `${VITE_BACKEND_URL}/auth/google`,
     //   "_self"
@@ -56,7 +53,9 @@ export const Login = () => {
               <Button variant="primary" type="submit" onClick={(e) => loginUser(e)}>
                 Login
               </Button>
-              <Button type="button" onClick={loginWithGoogle}>
+              <Button type="button" onClick={() => {
+                loginWithGoogle()
+              }}>
                 Login with google
               </Button>
             </Stack>

@@ -8,7 +8,7 @@ import "dotenv/config"
 import { VariablesEntorno } from "../types/IEnv";
 import axios from "axios";
 
-const { URL_CLIENT, GOOGLE_CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_SECRET_CLIENT } = process.env as VariablesEntorno;
+const { URL_CLIENT, GOOGLE_CALLBACK_URL } = process.env as VariablesEntorno;
 // console.log("URL_CLIENT:", URL_CLIENT)
 
 export const usersRouter = Router();
@@ -31,12 +31,9 @@ usersRouter.get("/auth/google",
 
 // * Callback from Google
 usersRouter.get(
-  // GOOGLE_CALLBACK_URL,
-  '/auth/google/callback',
+  GOOGLE_CALLBACK_URL,
   passport.authenticate("google", {
-    // successRedirect: "/login/success",
-    successRedirect: `${URL_CLIENT}`,//* URL DEL FRONT
-    // failureRedirect: "/login/failed",
+    successRedirect: `${URL_CLIENT}/dashboard`,//* URL DEL FRONT
     failureRedirect: `${URL_CLIENT}/login`,//* URL DEL FRONT
   }),
   (req, res) => {
@@ -49,7 +46,6 @@ usersRouter.get(
 
 usersRouter.get("/login", async (req, res) => {
   console.log("login", req.user)
-  // console.log("isAuthenticated", req.isAuthenticated())
   if (req.isAuthenticated()) {
     return res.status(200).json(req.user);
   } else {
