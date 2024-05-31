@@ -7,7 +7,7 @@ import { connect } from 'mongoose';
 import { allRoutes } from "./routes";
 import passport from 'passport'
 import expressSession from "express-session";
-import "./passport"; // Asegúrate de importar tu configuración de Passport
+import "./passport";
 
 const app: Application = express();
 

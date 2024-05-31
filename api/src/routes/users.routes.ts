@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { register } from "../services/users/register";
 import { login } from "../services/users/login";
 import { detail } from "../services/users/detail";
@@ -36,7 +36,7 @@ usersRouter.get(
     successRedirect: `${URL_CLIENT}/dashboard`,//* URL DEL FRONT
     failureRedirect: `${URL_CLIENT}/login`,//* URL DEL FRONT
   }),
-  (req, res) => {
+  (req: Request, res: Response) => {
     // Autenticación exitosa, redirige al cliente
     console.log("callback:", req.user)
     return res.status(200).json(req.user);
@@ -44,8 +44,8 @@ usersRouter.get(
   }
 );
 
-usersRouter.get("/login", async (req, res) => {
-  console.log("login", req.user)
+usersRouter.get("/login", async (req: Request, res: Response) => {
+  // console.log("login", req.user)
   if (req.isAuthenticated()) {
     return res.status(200).json(req.user);
   } else {
@@ -53,7 +53,7 @@ usersRouter.get("/login", async (req, res) => {
   }
 });
 
-usersRouter.get("/logout", (req, res, next) => {
+usersRouter.get("/logout", (req: Request, res: Response, next: NextFunction) => {
   console.log("logout")
   req.logout((err) => {
     console.log("Error CERRANDO SESSION:", err)

@@ -2,7 +2,6 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { postRequest } from "../hooks/services";
 import { ContextProviderProps, ISessionUser, TAuthContext } from "../interface";
 import { useNavigate } from "react-router-dom";
-import { removeUserFromLocalStorage } from "../localStorage/removeItems";
 const { VITE_BACKEND_URL } = import.meta.env;
 
 export const AuthContext = createContext<TAuthContext>({
@@ -59,7 +58,6 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     email:"",
     password:"",
   });
-  // const [logOutUser, setLogOutUser] = useState(false);
   
   async function getUserWithGoogle() {
     try {
@@ -67,11 +65,11 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
       const response = await fetch(url, {
         credentials: "include",
       });
-      console.log("response:", response)
+      // console.log("response:", response)
       if (response.ok && !user.googleId) {
         const data: ISessionUser = await response.json();
-        console.log("data:", data)
-
+        // console.log("data:", data)
+        
         localStorage.setItem("loginWithGoogle", JSON.stringify(data));
         setUser(data)
       }
@@ -79,9 +77,9 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
       console.log("Error en getUserWithGoogle por:", error)
     }
   }
-  console.log("user:", !user._id)
   useEffect(function() {
-    if (!user._id) {
+    console.log("user:", user)
+    if (!user.googleId) {
       getUserWithGoogle();
     }
   }, []);
@@ -130,31 +128,19 @@ export function AuthContextProvider({ children }: ContextProviderProps) {
     );
   }
 
-  // const logoutUser = useCallback(async function(): void {
   const logoutUser = useCallback(async function(): Promise<void> {
+    // console.log("CERRANDO SESSION CON USUARIO DE GOOGLE")
+    // console.log("CERRANDO SESSION CON USUARIO LOCAl")
+    logOutWithGoogle();
+    localStorage.removeItem('loginWithGoogle');
+    navigation("/login")
+    setUser({
+      _id: "",
+      googleId: "",
+      name: "",
+      email: "",
+    });
     console.log("user:", user)
-    if (user && user.googleId) {
-      console.log("CERRANDO SESSION CON USUARIO DE GOOGLE")
-      logOutWithGoogle();
-      navigation("/login")
-      setUser({
-        _id: "",
-        googleId: "",
-        name: "",
-        email: "",
-      });
-    } else if (user && !user.googleId) {
-      console.log("CERRANDO SESSION CON USUARIO LOCAl")
-      removeUserFromLocalStorage();
-      navigation("/login")
-      setUser({
-        _id: "",
-        googleId: "",
-        name: "",
-        email: "",
-      });
-      console.log("user:", user)
-    }
   }, []);
 
   return (
