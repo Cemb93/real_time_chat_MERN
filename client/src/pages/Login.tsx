@@ -11,6 +11,12 @@ export const Login = () => {
       "_self"
     );
   }
+  function loginWithFacebook() {
+    window.open(
+      `${VITE_BACKEND_URL}/auth/facebook/callback`,
+      "_self"
+    );
+  }
   return (
     <>
       <Form>
@@ -32,7 +38,10 @@ export const Login = () => {
                 Login
               </Button>
               <Button type="button" onClick={() => loginWithGoogle()}>
-                Login with google
+                Login with Google
+              </Button>
+              <Button type="button" onClick={() => loginWithFacebook()}>
+                Login with Facebook
               </Button>
             </Stack>
           </Col>

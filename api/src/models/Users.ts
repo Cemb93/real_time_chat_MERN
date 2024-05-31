@@ -5,6 +5,9 @@ export const usersModel = model<IUsers>("user", new Schema<IUsers>({
   googleId: {
     type: String,
   },
+  facebookId: {
+    type: String,
+  },
   name: {
     type: String,
   },

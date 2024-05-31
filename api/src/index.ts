@@ -8,6 +8,7 @@ import { allRoutes } from "./routes";
 import passport from 'passport'
 import expressSession from "express-session";
 import "./passport";
+import "./facebook";
 
 const app: Application = express();
 

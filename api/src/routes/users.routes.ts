@@ -64,3 +64,24 @@ usersRouter.get("/logout", (req: Request, res: Response, next: NextFunction) => 
     return res.redirect(`${URL_CLIENT}/login`);
   });
 });
+
+// ? ----------------------------- LOGIN WHIT FACEBOOK -----------------------------
+
+usersRouter.get('/auth/facebook',
+  passport.authenticate('facebook', {
+    scope: ["email"],
+  })
+);
+
+usersRouter.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/login',
+  }),
+  function(req: Request, res: Response) {
+    // Autenticación exitosa, redirige al cliente
+    console.log("callback with FB:", req.user)
+    return res.status(200).json(req.user);
+  }
+);

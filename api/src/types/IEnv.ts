@@ -6,4 +6,7 @@ export type VariablesEntorno = {
   GOOGLE_SECRET_CLIENT: string
   GOOGLE_CALLBACK_URL: string
   URL_CLIENT: string
+  FACEBOOK_ID: string
+  FACEBOOK_SECRET: string
+  FACEBOOK_CALLBACK_URL: string
 }
